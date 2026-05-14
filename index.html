@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yosr Social</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Handjet:wght,ELSH@100..900,2&family=Rakkas&family=Rubik:ital,wght@0,300..900;1,300..900&family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --off-white: #f0ece0;
+      --yellow: #d4f200;
+      --red: #c0392b;
+      --muted: rgba(240, 236, 224, 0.45);
+      --border: rgba(240, 236, 224, 0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--off-white);
+      font-family: 'Space Mono', monospace;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* GRAIN OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      mix-blend-mode: normal;
+      transition: background 0.3s;
+    }
+
+    nav.scrolled { background: var(--black); border-bottom: 1px solid var(--border); }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.15em;
+      color: var(--off-white);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--yellow); }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+
+    .nav-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--yellow); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 3rem 5rem;
+      padding-top: 6rem;  
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-arabic {
+      font-family: 'Aref Ruqaa', sans-serif;
+      font-size: clamp(4rem, 11vw, 10rem);
+      font-weight: 900;
+      line-height: 0.9;
+      color: #363636;
+      position: absolute;
+      top: 6rem;
+      right: 5rem;
+      text-align: right;
+      pointer-events: none;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-counter {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .hero-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 11rem);
+      line-height: 0.88;
+      letter-spacing: -0.01em;
+      max-width: 80%;
+    }
+
+    .hero-headline .line-1 { color: var(--off-white); display: block; }
+    .hero-headline .line-2 { color: var(--yellow); display: block; }
+    .hero-headline .line-3 { color: var(--off-white); display: block; }
+
+    .hero-sub {
+      margin-top: 2rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .hero-tagline {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      max-width: 300px;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      border: 1px solid var(--yellow);
+      padding: 1rem 2rem;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .hero-cta:hover { background: var(--yellow); color: var(--black); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+    }
+
+    .hero-scroll::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 40px;
+      background: var(--muted);
+      animation: scrollline 1.5s ease-in-out infinite;
+    }
+
+    @keyframes scrollline {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(0.5); }
+    }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+      background: var(--black);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 4rem;
+      width: max-content;
+      animation: marquee 20s linear infinite;
+    }
+
+    .marquee-track span {
+      font-family: 'Handjet', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      color: var(--muted);
+    }
+
+    .marquee-track span.accent { color: var(--yellow); }
+
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* SECTIONS COMMON */
+    section { padding: 7rem 3rem; }
+
+    .section-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* SERVICES */
+    #services { border-bottom: 1px solid var(--border); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+
+    .service-item {
+      padding: 3rem;
+      border-right: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .service-item:last-child { border-right: none; }
+    .service-item:hover { background: rgba(212, 242, 0, 0.03); }
+
+    .service-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 4rem;
+      color: var(--yellow);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .service-title {
+      font-family: 'Handjet', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--off-white);
+    }
+
+    .service-title-ar {
+      font-family: 'Handjet', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      direction: rtl;
+    }
+
+    .service-desc {
+      font-size: 0.8rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+ /* WORK */
+#work { border-bottom: 1px solid var(--border); }
+
+/* shared work subsection label */
+.work-sub-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.work-sub-label::before {
+  content: '';
+  width: 20px;
+  height: 1px;
+  background: var(--yellow);
+}
+
+/* ── SOCIAL MEDIA MANAGEMENT ── */
+.smm-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin-bottom: 5rem;
+}
+
+.smm-item {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  aspect-ratio: 4/5;
+  cursor: crosshair;
+}
+
+.smm-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.smm-item:hover img { transform: scale(1.03); }
+
+.smm-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.smm-placeholder-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  color: var(--border);
+  line-height: 1;
+}
+
+.smm-placeholder-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  color: var(--muted);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.smm-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.88);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border: 1px solid var(--yellow);
+}
+
+.smm-item:hover .smm-overlay { opacity: 1; }
+
+.smm-overlay-client {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--off-white);
+}
+
+.smm-overlay-type {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--yellow);
+  margin-top: 0.3rem;
+}
+
+/* ── BRAND & VISUAL IDENTITY ── */
+.brand-grid {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  gap: 1px;
+  background: var(--border);
+  margin-bottom: 5rem;
+}
+
+.brand-item {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  aspect-ratio: 1/1;
+  cursor: crosshair;
+}
+
+.brand-item.wide { aspect-ratio: unset; }
+
+.brand-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.brand-item:hover img { transform: scale(1.03); }
+
+.brand-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.brand-placeholder-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  color: var(--border);
+  line-height: 1;
+}
+
+.brand-placeholder-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  color: var(--muted);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.brand-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.88);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border: 1px solid var(--yellow);
+}
+
+.brand-item:hover .brand-overlay { opacity: 1; }
+
+.brand-overlay-title {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--off-white);
+}
+
+.brand-overlay-type {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--yellow);
+  margin-top: 0.3rem;
+}
+
+/* ── STRATEGY BREAKDOWN ── */
+.case-study {
+  border: 1px solid var(--border);
+  padding: 3.5rem;
+}
+
+.case-study-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 3rem;
+}
+
+.case-study-client {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem;
+  line-height: 0.9;
+  color: var(--off-white);
+}
+
+.case-study-client span { color: var(--yellow); }
+
+.case-study-client-ar {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--muted);
+  direction: rtl;
+  margin-top: 0.5rem;
+}
+
+.case-study-meta { display: flex; flex-direction: column; justify-content: flex-end; gap: 0.6rem; }
+
+.case-study-meta-item {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.68rem;
+  align-items: baseline;
+}
+
+.case-study-meta-key {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  min-width: 70px;
+}
+
+.case-study-meta-val { color: var(--muted); }
+
+.case-study-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3rem;
+}
+
+.case-study-block-title {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.case-study-block-text {
+  font-size: 0.72rem;
+  line-height: 1.9;
+  color: rgba(240, 236, 224, 0.65);
+}
+
+.case-study-block-text strong {
+  color: var(--off-white);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.4rem;
+  margin-top: 1rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+}
+
+.case-study-block-text strong:first-child { margin-top: 0; }
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .smm-grid { grid-template-columns: 1fr; }
+  .brand-grid { grid-template-columns: 1fr; }
+  .case-study { padding: 2rem 1.5rem; }
+  .case-study-header { grid-template-columns: 1fr; gap: 2rem; }
+  .case-study-body { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+
+    /* ABOUT */
+    #about {
+      border-bottom: 1px solid var(--border);
+      background: #0d0d0d;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 40fr 60fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .about-image-wrap {
+      position: relative;
+    }
+
+    .about-image-frame {
+      width: 100%;
+      aspect-ratio: 3/4;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+      background: #111;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-image-frame::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: 40px;
+      height: 40px;
+      border-top: 2px solid var(--yellow);
+      border-left: 2px solid var(--yellow);
+    }
+
+    .about-image-frame::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 40px;
+      height: 40px;
+      border-bottom: 2px solid var(--yellow);
+      border-right: 2px solid var(--yellow);
+    }
+
+    .about-image-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .about-image-arabic {
+      font-family: 'Handjet', sans-serif;
+      font-size: 0.9rem;
+      color: var(--border);
+      direction: rtl;
+    }
+
+    .about-content { padding-top: 1rem; }
+
+    .about-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      line-height: 0.9;
+      margin-bottom: 0.5rem;
+    }
+
+    .about-name-ar {
+      font-family: 'Cairo', sans-serif;
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      direction: rtl;
+      margin-bottom: 2rem;
+    }
+
+    .about-divider {
+      width: 40px;
+      height: 1px;
+      background: var(--yellow);
+      margin-bottom: 2rem;
+    }
+
+    .about-text {
+      font-size: 0.78rem;
+      line-height: 2;
+      color: rgba(240, 236, 224, 0.7);
+      margin-bottom: 3rem;
+    }
+
+    .about-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .about-meta-item {
+      display: flex;
+      gap: 1.5rem;
+      align-items: baseline;
+      font-size: 0.68rem;
+    }
+
+    .about-meta-key {
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      min-width: 80px;
+    }
+
+    .about-meta-val { color: var(--muted); }
+
+    /* CONTACT */
+    #contact { border-bottom: 1px solid var(--border); }
+
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: end;
+    }
+
+    .contact-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 8vw, 7rem);
+      line-height: 0.9;
+      margin-bottom: 1rem;
+    }
+
+    .contact-headline span { color: var(--yellow); }
+
+    .contact-headline-ar {
+      font-family: 'Handjet', sans-serif;
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      direction: rtl;
+      margin-bottom: 2rem;
+    }
+
+    .contact-sub {
+      font-size: 0.72rem;
+      line-height: 1.9;
+      color: var(--muted);
+      max-width: 360px;
+      margin-bottom: 3rem;
+    }
+
+    .contact-cta {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      color: var(--black);
+      padding: 1.2rem 2.5rem;
+      text-decoration: none;
+      font-weight: 700;
+      transition: opacity 0.2s;
+    }
+
+    .contact-cta:hover { opacity: 0.85; }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .contact-link-item { border-top: 1px solid var(--border); padding-top: 1.5rem; }
+
+    .contact-link-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--yellow);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .contact-link-val {
+      font-size: 0.85rem;
+      color: var(--off-white);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .contact-link-val:hover { color: var(--yellow); }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+    }
+
+    .footer-copy {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+    }
+
+    .footer-arabic {
+      font-family: 'Handjet', sans-serif;
+      font-size: 0.75rem;
+      color: var(--border);
+      direction: rtl;
+    }
+
+    /* FADE IN ANIMATION */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      nav .nav-links { gap: 1.5rem; }
+      section { padding: 5rem 1.5rem; }
+      #hero { padding: 0 1.5rem 4rem; }
+      .hero-arabic { font-size: 3rem; top: 5rem; right: 1.5rem; }
+      .hero-headline { max-width: 100%; }
+      .hero-sub { flex-direction: column; align-items: flex-start; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .work-grid { grid-template-columns: 1fr; }
+      .work-item:nth-child(3), .work-item:nth-child(4) { grid-column: 1; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .contact-inner { grid-template-columns: 1fr; gap: 4rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">YOSR<span>.</span>SOCIAL</a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-arabic">هويتك<br/>مش قالب<br/>جاهز</div>
+    <h1 class="hero-headline">
+      <span class="line-1">YOU'VE BEEN</span>
+      <span class="line-2">SOLD ENOUGH</span>
+      <span class="line-3">FORMULAS.</span>
+    </h1>
+    <div class="hero-sub">
+      <p class="hero-tagline">Let's build a voice that lasts.</p>
+      <a href="#work" class="hero-cta">See My Work</a>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>Social Media Strategy</span>
+      <span class="accent">—</span>
+      <span>Brand Voice</span>
+      <span class="accent">—</span>
+      <span>استراتيجية المحتوى</span>
+      <span class="accent">—</span>
+      <span>Content Direction</span>
+      <span class="accent">—</span>
+      <span>هوية بصرية</span>
+      <span class="accent">—</span>
+      <span>Brand Strategy</span>
+      <span class="accent">—</span>
+      <span>Social Media Strategy</span>
+      <span class="accent">—</span>
+      <span>Brand Voice</span>
+      <span class="accent">—</span>
+      <span>استراتيجية المحتوى</span>
+      <span class="accent">—</span>
+      <span>Content Direction</span>
+      <span class="accent">—</span>
+      <span>هوية بصرية</span>
+      <span class="accent">—</span>
+      <span>Brand Strategy</span>
+      <span class="accent">—</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-label">About / عن يسر</div>
+    <div class="about-grid">
+      <div class="about-image-wrap fade-in">
+        <div class="about-image-frame">
+  <img src="images/yourphoto.jpg" style="width:100%;height:100%;object-fit:cover;" />
+</div>
+      </div>
+      <div class="about-content fade-in">
+        <h2 class="about-name">YOSR<br/>SOCIAL</h2>
+        <div class="about-name-ar">يسر - استراتيجية وإبداع</div>
+        <div class="about-divider"></div>
+        <p class="about-text">
+I came into business school wanting to work in marketing because it felt creative. Yet I left with a degree in strategic business management and a deep distrust of the industry. Then spent years treating social media management as a temporary gig while I figured out what actually felt like me. <br></br>
+It took a research spiral about skincare content and a growing fury at how easy it has become to produce content that looks legitimate and means nothing for me to realize that walking away wasn't the righteous move. It was the complicit one.<br></br>
+Marketing at its core is connecting people to genuine solutions. That definition only works if the solution is actually genuine. So I work with brands that deliver real value and help them build the kind of audience trust that no ad budget can buy and no competitor can easily break.
+It's easier than ever to scam. Which means honesty is now the strongest strategy there is. That's my niche. That's the mission.
+        </p>
+        <div class="about-meta">
+          <div class="about-meta-item">
+            <span class="about-meta-key">Based in</span>
+            <span class="about-meta-val">Algeria</span>
+          </div>
+          <div class="about-meta-item">
+            <span class="about-meta-key">Email</span>
+            <span class="about-meta-val">yosrsocial@gmail.com</span>
+          </div>
+          <div class="about-meta-item">
+            <span class="about-meta-key">Instagram</span>
+            <span class="about-meta-val">@yosrsocial</span>
+          </div>
+          <div class="about-meta-item">
+            <span class="about-meta-key">LinkedIn</span>
+            <span class="about-meta-val">www.linkedin.com/in/yousra-boukhari-137560164</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="section-label">What I Do / ما أفعله</div>
+    <div class="services-grid">
+      <div class="service-item fade-in">
+        <div class="service-num">01</div>
+        <div class="service-title">Social Media Strategy</div>
+        <div class="service-title-ar">استراتيجية وسائل التواصل الاجتماعي</div>
+        <p class="service-desc">A system built around your audience's actual language, behavior, and desires.</p>
+      </div>
+      <div class="service-item fade-in">
+        <div class="service-num">02</div>
+        <div class="service-title">Brand Strategy</div>
+        <div class="service-title-ar">استراتيجية العلامة التجارية</div>
+        <p class="service-desc">Positioning, voice, and identity work that comes from the inside out.</p>
+      </div>
+      <div class="service-item fade-in">
+        <div class="service-num">03</div>
+        <div class="service-title">Content Direction</div>
+        <div class="service-title-ar">إدارة المحتوى الإبداعي</div>
+        <p class="service-desc">Visual and editorial direction for brands that want to mean something: Concepts, creative briefs, and frameworks.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+<section id="work">
+  <div class="section-label">Selected Work / أعمال مختارة</div>
+
+  <!-- PART 1: SOCIAL MEDIA MANAGEMENT -->
+  <div class="work-sub-label">Social Media Management - إدارة وسائل التواصل</div>
+  <div class="smm-grid fade-in">
+
+    <div class="smm-item">
+      <img src="images/sms1.png" style="width:100%;height:100%;object-fit:cover;" />
+      <div class="smm-overlay">
+        <div class="smm-overlay-client">HomeTalk</div>
+        <div class="smm-overlay-type">Social Media Management, Strategy & Brand Identity- 2026</div>
+      </div>
+    </div>
+
+    <div class="smm-item">
+      <img src="images/sms2.png" style="width:100%;height:100%;object-fit:cover;" />
+      <div class="smm-overlay">
+        <div class="smm-overlay-client">Tasdirat Al Aroussa</div>
+        <div class="smm-overlay-type">Social Media Management & Strategy - 2026</div>
+      </div>
+    </div>
+
+    <div class="smm-item">
+    <img src="images/sms3.png" style="width:100%;height:100%;object-fit:cover;" />
+      <div class="smm-overlay">
+        <div class="smm-overlay-client">Fikra to Form</div>
+        <div class="smm-overlay-type">Social Media Strategy & Brand Identity - 2025</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PART 2: BRAND & VISUAL IDENTITY -->
+  <div class="work-sub-label">Brand & Visual Identity - الهوية البصرية</div>
+  <div class="brand-grid fade-in">
+
+    <div class="brand-item wide">
+      <img src="images/Hometalk visual identity.png" style="width:100%;height:100%;object-fit:cover;" />
+      <div class="brand-overlay">
+        <div class="brand-overlay-title">Hometalk</div>
+        <div class="brand-overlay-type">Brand Identity - 2026</div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-rows: 1fr 1fr; gap: 1px; background: var(--border);">
+      <div class="brand-item">
+       <img src="images/l'art du repos vi.png" style="width:100%;height:100%;object-fit:contain;" />
+        <div class="brand-overlay">
+          
+          <div class="brand-overlay-title">L'art du Repos</div>
+          <div class="brand-overlay-type">Logo Design - 2025</div>
+        </div>
+      </div>
+      <div class="brand-item">
+        <img src="images/sarabend pres.png" style="width:100%;height:100%;object-fit:contain;" />
+        <div class="brand-overlay">
+          <div class="brand-overlay-title">Sara Bend</div>
+          <div class="brand-overlay-type">Logo Design - 2025</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PART 3: STRATEGY BREAKDOWN -->
+  <div class="work-sub-label">Strategy Breakdown - تشريح الاستراتيجية</div>
+  <div class="case-study fade-in">
+    <div class="case-study-header">
+      <div>
+        <div class="case-study-client">Home<br/><span>Talk</span></div>
+      </div>
+      <div class="case-study-meta">
+        <div class="case-study-meta-item">
+          <span class="case-study-meta-key">Industry</span>
+          <span class="case-study-meta-val">Online Education</span>
+        </div>
+        <div class="case-study-meta-item">
+          <span class="case-study-meta-key">Market</span>
+          <span class="case-study-meta-val">Algerian / French Diaspora</span>
+        </div>
+        <div class="case-study-meta-item">
+          <span class="case-study-meta-key">Scope</span>
+          <span class="case-study-meta-val">Brand Identity + Social Media Strategy + Community Management</span>
+        </div>
+        <div class="case-study-meta-item">
+          <span class="case-study-meta-key">Year</span>
+          <span class="case-study-meta-val">2026</span>
+        </div>
+      </div>
+    </div>
+    <div class="case-study-body">
+      <div>
+        <div class="case-study-block-title">The Situation</div>
+        <div class="case-study-block-text">
+          Before we started working together, the online presence of this brand was all over the place. You couldn't figure out what services they provided or even what industry they were a part of by glancing at their profile. the name and logo of the brand made it seem like a culinary school when it was actually a language school.
+         <br></br>
+           That was because the client was trying to target a very large and unspecified audience. Some people are under the impression the more generic their content is the more people they'll appeal to, thus making more sales. When in fact the opposite is true.  
+        </div>
+      </div>
+      <div>
+        <div class="case-study-block-title">The Approach</div>
+        <div class="case-study-block-text">
+          I hopped on a strategy call with the client, mapped their goals and current services they offer, then planned a full rebrand complete with the visual identity and the content strategy. The main decision we worked on was finding a niche, in this client's case was offering online language tutoring to Algerian children between 6-16 years old, by teachers who live in the countries where the language is spoken in.'
+        </div>
+      </div>
+      <div>
+        <div class="case-study-block-title">The Output</div>
+        <div class="case-study-block-text">
+          - visual identity <br></br> - Brand Strategy <br></br> - Content Strategy <br></br> - 1 month of Content Creation & Scheduling <br></br> - Community Management
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-label">Contact / تواصل</div>
+    <div class="contact-inner">
+      <div class="fade-in">
+        <h2 class="contact-headline">LET'S<br/><span>TALK.</span></h2>
+        <div class="contact-headline-ar">لنتحدث</div>
+        <p class="contact-sub">Strategy built around your brand's actual voice and the audience you're trying to reach.</p>
+        <a href="mailto:your@email.com" class="contact-cta">Get In Touch</a>
+      </div>
+      <div class="contact-links fade-in">
+        <div class="contact-link-item">
+          <div class="contact-link-label">Email</div>
+          <a href="mailto:your@email.com" class="contact-link-val">yosrsocial@gmail.com</a>
+        </div>
+        <div class="contact-link-item">
+          <div class="contact-link-label">Instagram</div>
+          <a href="#" class="contact-link-val">@yosrsocial</a>
+        </div>
+        <div class="contact-link-item">
+          <div class="contact-link-label">LinkedIn</div>
+          <a href="#" class="contact-link-val">Yousra Boukhari</a>
+        </div>
+        <div class="contact-link-item">
+          <div class="contact-link-label">Currently</div>
+          <a href="#" class="contact-link-val" style="color: var(--yellow);">Available for new projects ✦</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">YOSR.SOCIAL</div>
+    <div class="footer-copy">© 2025 Yosr Social. All rights reserved.</div>
+  </footer>
+
+  <script>
+    // Nav scroll behavior
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Fade in on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 120);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
